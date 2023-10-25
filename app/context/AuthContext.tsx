@@ -9,6 +9,8 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = "my-jwt";
+const USER_ID = "user-id";
+
 export const API_URL = "http://192.168.0.243:8084";
 const AuthContext = createContext<AuthProps>({});
 
@@ -56,6 +58,7 @@ export const AuthProvider = ({ children }: any) => {
       ] = `Bearer ${result.data.token}`;
 
       await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
+      await SecureStore.setItemAsync(USER_ID, JSON.stringify(result.data.id));
 
       return result;
     } catch (e) {
