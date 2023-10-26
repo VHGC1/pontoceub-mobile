@@ -23,15 +23,19 @@ export const Layout = () => {
     <NavigationContainer>
       <Stack.Navigator>
         {authState?.authenticated ? (
-          <Stack.Screen 
-          name="Home" 
-          component={Home}
-          options={{
-            headerRight: () => <Button onPress={onLogout} title="Sign Out"/>
-          }}
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{
+              headerRight: () => <Button onPress={onLogout} title="Sign Out" />,
+            }}
           ></Stack.Screen>
         ) : (
-          <Stack.Screen name="Login" component={Login}></Stack.Screen>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          ></Stack.Screen>
         )}
       </Stack.Navigator>
     </NavigationContainer>
