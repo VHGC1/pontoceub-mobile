@@ -5,9 +5,11 @@ import {
   Button,
   TextInput,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Login = () => {
   const { onLogin } = useAuth();
@@ -27,28 +29,35 @@ const Login = () => {
     <View style={styles.container}>
       <View style={styles.box}>
         <Text style={styles.title}> Login</Text>
-
         <View style={styles.inputView}>
           <TextInput
             placeholder="Email"
             style={styles.inputText}
             value={email}
             onChangeText={(text) => setEmail(text)}
-            selectionColor={'#000'}
+            selectionColor={"#000"}
             autoCapitalize="none"
           />
         </View>
 
-        <View style={styles.inputView}>
+        <View style={[styles.inputView, styles.inputViewPassword]}>
           <TextInput
-            style={styles.inputText}
+            style={[styles.inputText, { width: "90%" }]}
             placeholder="Password"
             value={password}
             onChangeText={(text) => setPassword(text)}
-            selectionColor={'#000'}
+            selectionColor={"#000"}
             secureTextEntry={showPassword}
             autoCapitalize="none"
           />
+
+          <TouchableOpacity onPress={() => setShowPassord(!showPassword)}>
+            <MaterialCommunityIcons
+              name={showPassword ? "eye-off" : "eye"}
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.loginBtn} onPress={login}>
@@ -63,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
 
   box: {
@@ -89,8 +98,13 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
-    justifyContent: "center",
-    padding: 20,
+    paddingHorizontal: 18,
+  },
+
+  inputViewPassword: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   inputText: {
