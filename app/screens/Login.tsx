@@ -20,8 +20,8 @@ const Login = () => {
   const login = async () => {
     const result = await onLogin!(email, password);
     if (result && result.error) {
-      console.log(result);
-      alert(result.msg);
+      console.log(result.msg.response.data);
+      alert(result.msg.response.data.message);
     }
   };
 
