@@ -17,7 +17,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const timer = setInterval(() => {
       setHour(dayjs());
-    }, 1000 * 15);
+    }, 1000 * 60);
 
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -54,7 +54,7 @@ export default function HomeScreen() {
         },
       })
       .then((response) => console.log(response))
-      .catch((e) => alert(e.response.data.message));
+      .catch((e) => alert(e.response?.data.message));
   }
 
   return (

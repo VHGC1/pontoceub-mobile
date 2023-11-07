@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: any) => {
       ] = `Bearer ${result.data.token}`;
 
       await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
-      await AsyncStorage.setItem("user-id", JSON.stringify(result.data.id))
+      await AsyncStorage.setItem("user-id", JSON.stringify(result.data.id));
 
       return result;
     } catch (e) {
@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }: any) => {
 
   const logout = async () => {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await AsyncStorage.removeItem("user-id");
 
     axios.defaults.headers.common["Authorization"] = "";
 

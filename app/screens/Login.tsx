@@ -81,8 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 25,
-    paddingBottom: 25,
+    paddingVertical: 25
   },
 
   title: {

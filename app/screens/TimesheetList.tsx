@@ -1,14 +1,16 @@
-import { Text, View } from 'react-native'
-import React, { Component } from 'react'
+import { View, Text } from 'react-native'
 
-export class TimesheetList extends Component {
-  render() {
-    return (
-      <View>
-        <Text>timesheetList</Text>
-      </View>
-    )
-  }
+
+const TimesheetList = () => {
+
+
+  
+
+  return (
+    <View>
+      <Text>TimesheetList</Text>
+    </View>
+  )
 }
 
 export default TimesheetList;
