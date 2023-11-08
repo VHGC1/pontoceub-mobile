@@ -25,31 +25,11 @@ const Schedule = () => {
   }, [id]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-        paddingTop: 25,
-      }}
-    >
-      <View
-        style={{
-          paddingTop: 25,
-          width: "95%",
-          backgroundColor: "#fff",
-          borderRadius: 25,
-        }}
-      >
+    <View style={styles.container}>
+      <View style={styles.boxContainer}>
         <View>
-          <Text style={{ marginLeft: 25, marginBottom: 10 }}>Aulas</Text>
-          <View
-            style={{
-              backgroundColor: "#000",
-              height: 2,
-              width: "100%",
-            }}
-          />
+          <Text style={styles.boxContainerTitle}>Aulas</Text>
+          <View style={styles.lineBoxContainerHeader} />
         </View>
 
         <View
@@ -57,25 +37,17 @@ const Schedule = () => {
             flexDirection: "row",
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              backgroundColor: "#f2f2f2",
-            }}
-          >
+          <View style={styles.daysContainer}>
             {classes?.map(({ day }, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => setSelectedDay(index)}
-                style={{
-                  backgroundColor: index == selectedDay ? "#fff" : "#f2f2f2",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingVertical: 15,
-                  borderTopLeftRadius: 5,
-                  borderBottomLeftRadius: 5,
-                }}
+                style={[
+                  {
+                    backgroundColor: index == selectedDay ? "#fff" : "#f2f2f2",
+                  },
+                  styles.daysButton,
+                ]}
               >
                 <Text
                   style={{
@@ -89,18 +61,10 @@ const Schedule = () => {
             ))}
           </View>
 
-          <View
-            style={{
-              flex: 3,
-              flexDirection: "column",
-              paddingVertical: 18,
-              paddingHorizontal: 25,
-              gap: 15,
-            }}
-          >
+          <View style={styles.classesContainer}>
             {classes[selectedDay]?.classes.map(
               ({ schedule, discipline, campus }, index) => (
-                <View key={campus + index} >
+                <View key={campus + index}>
                   <View
                     style={{
                       flexDirection: "row",
@@ -127,5 +91,54 @@ const Schedule = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 25,
+  },
+
+  boxContainer: {
+    paddingTop: 25,
+    width: "95%",
+    backgroundColor: "#fff",
+    borderRadius: 25,
+  },
+
+  lineBoxContainerHeader: {
+    backgroundColor: "#000",
+    height: 2,
+    width: "100%",
+  },
+
+  boxContainerTitle: {
+    marginLeft: 25,
+    marginBottom: 10,
+  },
+
+  daysContainer: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#f2f2f2",
+  },
+
+  daysButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 15,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
+  },
+
+  classesContainer: {
+    flex: 3,
+    flexDirection: "column",
+    paddingVertical: 18,
+    paddingHorizontal: 25,
+    gap: 15,
+  },
+});
 
 export default Schedule;

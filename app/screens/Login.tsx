@@ -2,10 +2,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   TextInput,
   TouchableOpacity,
-  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
