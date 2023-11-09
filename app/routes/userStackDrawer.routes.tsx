@@ -67,7 +67,7 @@ export default function UserStack() {
         name="TimesheetList"
         component={TimesheetList}
         options={{
-          drawerLabel: "Registros de ponto",
+          drawerLabel: "Lista de Registros",
           drawerIcon: () => (
             <MaterialCommunityIcons
               name="format-list-bulleted"

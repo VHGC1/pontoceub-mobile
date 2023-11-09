@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "pontoceub-mobile",
@@ -24,10 +25,21 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+    "config": {
+      "googleMaps": {
+        "apiKey": ""
       }
+    },
+      "package": "com.vhgcs1.pontoceubmobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "13b2f39d-e13a-48c9-803a-fb03cbf8c4d8"
+      }
     }
   }
 }

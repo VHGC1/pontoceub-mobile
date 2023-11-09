@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { API_URL } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 const Schedule = () => {
   const [id, setId] = useState();
@@ -14,15 +16,15 @@ const Schedule = () => {
   useEffect(() => {
     AsyncStorage.getItem("user-id")
       .then((r) => setId(r))
-      .catch((e) => console.log(e));
   }, []);
 
-  useEffect(() => {
-    axios
+  useFocusEffect(
+    useCallback(() => {
+      axios
       .get(`${API_URL}/classes/${id}`)
       .then((r) => setClasses(r.data))
-      .catch((e) => console.log(e));
-  }, [id]);
+    }, [id])
+  )
 
   return (
     <View style={styles.container}>

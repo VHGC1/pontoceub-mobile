@@ -1,7 +1,7 @@
 import "dayjs/locale/pt-br";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
@@ -53,7 +53,7 @@ export default function HomeScreen() {
           longitude: currentLocation.longitude,
         },
       })
-      .then((response) => console.log(response))
+      .then((response) => alert(`${response.data?.activityType.toLowerCase()} registrada!`))
       .catch((e) => alert(e.response?.data.message));
   }
 
@@ -61,7 +61,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {initialRegion ? (
         <View style={styles.mapContainer}>
-          <MapView style={styles.map} initialRegion={initialRegion}>
+          <MapView provider={PROVIDER_GOOGLE} style={styles.map} initialRegion={initialRegion}>
             <Marker
               coordinate={{
                 latitude: currentLocation.latitude,
@@ -98,11 +98,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#fff",
-    paddingTop: 50,
+    paddingTop: 25,
   },
 
   mapContainer: {
-    width: "80%",
+    width: "85%",
     height: "50%",
     borderRadius: 25,
     overflow: "hidden",
@@ -120,18 +120,17 @@ const styles = StyleSheet.create({
   clockContainer: {
     backgroundColor: "#ccc",
     padding: 25,
-    width: "80%",
+    width: "85%",
     marginVertical: 30,
     borderRadius: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 10,
     fontSize: 25,
   },
 
   btn: {
-    width: "80%",
+    width: "85%",
     backgroundColor: "#ccc",
     borderRadius: 25,
     height: 50,
