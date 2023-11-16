@@ -6,25 +6,40 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-
+import dayjs from "dayjs";
 
 const Schedule = () => {
   const [id, setId] = useState();
   const [classes, setClasses] = useState([]);
   const [selectedDay, setSelectedDay] = useState(0);
 
-  useEffect(() => {
-    AsyncStorage.getItem("user-id")
-      .then((r) => setId(r))
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem("user-id").then((r) => setId(r));
+    }, [])
+  );
 
   useFocusEffect(
     useCallback(() => {
-      axios
-      .get(`${API_URL}/classes/${id}`)
-      .then((r) => setClasses(r.data))
+      axios.get(`${API_URL}/classes/${id}`).then((r) => setClasses(r.data));
     }, [id])
-  )
+  );
+
+  useEffect(() => {
+    const weekDays = [
+      "segunda-feira",
+      "terça-feira",
+      "quarta-feira",
+      "quinta-feira",
+      "sexta-feira",
+    ];
+
+    const today = dayjs().day() - 1;
+
+    classes
+      .map(({ day }) => day)
+      .filter((i, index) => i == weekDays[today] && setSelectedDay(index));
+  }, [classes]);
 
   return (
     <View style={styles.container}>

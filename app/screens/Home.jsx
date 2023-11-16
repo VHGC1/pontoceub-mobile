@@ -6,8 +6,8 @@ import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { API_URL } from "../context/AuthContext"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "../context/AuthContext";
 
 export default function HomeScreen() {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -44,7 +44,7 @@ export default function HomeScreen() {
 
   async function timesheetRegistry() {
     const userId = await AsyncStorage.getItem("user-id");
-      
+
     await axios
       .post(`${API_URL}/registries/create`, {
         id: userId,
@@ -53,7 +53,9 @@ export default function HomeScreen() {
           longitude: currentLocation.longitude,
         },
       })
-      .then((response) => alert(`${response.data?.activityType.toLowerCase()} registrada!`))
+      .then((response) =>
+        alert(`${response.data?.activityType.toLowerCase()} registrada!`)
+      )
       .catch((e) => alert(e.response?.data.message));
   }
 
@@ -61,7 +63,11 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {initialRegion ? (
         <View style={styles.mapContainer}>
-          <MapView provider={PROVIDER_GOOGLE} style={styles.map} initialRegion={initialRegion}>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            initialRegion={initialRegion}
+          >
             <Marker
               coordinate={{
                 latitude: currentLocation.latitude,
@@ -75,7 +81,7 @@ export default function HomeScreen() {
       )}
 
       <View style={styles.clockContainer}>
-        <Text></Text>
+        <MaterialCommunityIcons name={"clock-outline"} size={35} color="#ccc" />
         <Text style={{ fontSize: 25, fontWeight: "bold" }}>
           {hour.format("HH:mm")}
         </Text>
