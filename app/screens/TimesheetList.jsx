@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import React from 'react'
 import api from "../api";
 
 const TimesheetList = () => {
@@ -11,11 +10,13 @@ const TimesheetList = () => {
 
   useFocusEffect(
     useCallback(() => {
-      api.get(`/registries/?page=${pageNo}&size=7`).then((r) => {
-        console.log(r)
-        setTimeSheetList(r.data.content);
-        setLastPage(r.data.last);
-      });
+      api
+        .get(`time-registry/registries?pageNumber=${pageNo}&size=7`)
+        .then((r) => {
+          console.log(r);
+          setTimeSheetList(r.data.content);
+          setLastPage(r.data.last);
+        });
     }, [])
   );
 
@@ -28,13 +29,18 @@ const TimesheetList = () => {
 
     if (!lastPage) {
       api
-        .get(`/registries/?page=${pageNo}&size=7`)
+        .get(`time-registry/registries?pageNumber=${pageNo}&size=7`)
         .then((r) => setTimeSheetList([...timeSheetList, ...r.data]));
     }
   };
 
   return (
     <View style={styles.container}>
+      {timeSheetList.length === 0 && (
+        <div style={{ alignSelf: "center", marginTop: "1rem" }}>
+          Não existem registros no sistema!
+        </div>
+      )}
       <FlatList
         onEndReached={() => addOnTheTimeSheetList()}
         onEndReachedThreshold={0.01}

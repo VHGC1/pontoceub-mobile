@@ -1,15 +1,13 @@
 import "dayjs/locale/pt-br";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import axios from "axios";
-import { API_URL } from "../context/AuthContext";
 import { IinitialRegion } from "../interfaces/IinitialRegion";
 import { IcurrentLocation } from "../interfaces/IcurrentLocation";
 import api from "../api";
+import * as SecureStore from "expo-secure-store";
 
 export default function HomeScreen() {
   const [currentLocation, setCurrentLocation] = useState<
@@ -56,16 +54,15 @@ export default function HomeScreen() {
           longitude: currentLocation?.longitude,
         },
       })
-      .then((response) =>
+      .then((response: any) => {
         alert(
           `${response.data?.activityType.toLowerCase()} ${
             response.data?.activityType.slice(-1) === "A"
               ? "registrada"
               : "registrado"
-          }!`
-        )
-      )
-      .catch((e) => alert(e.response?.data.message));
+          }!`)
+      })
+      .catch((e: any) => alert(e.response?.data.message));
   }
 
   return (

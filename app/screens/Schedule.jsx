@@ -1,7 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
-import axios from "axios";
-import { API_URL } from "../context/AuthContext";
+import { useEffect, useState, useCallback } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";

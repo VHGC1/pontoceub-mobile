@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
@@ -29,11 +28,13 @@ export const AuthProvider = ({ children }: any) => {
     authenticated: null,
   });
 
+  const os = Platform.OS;
+
   useEffect(() => {
     const loadToken = async () => {
       let token;
 
-      if (Platform.OS === "web") {
+      if (os === "web") {
         token = localStorage.getItem(TOKEN_KEY);
       } else {
         token = await SecureStore.getItemAsync(TOKEN_KEY);
@@ -66,9 +67,12 @@ export const AuthProvider = ({ children }: any) => {
         "Authorization"
       ] = `Bearer ${result.data}`;
 
-      localStorage.setItem(TOKEN_KEY, result.data)
-      await SecureStore.setItemAsync(TOKEN_KEY, result.data);
-
+      if (os === "web") {
+        localStorage.setItem(TOKEN_KEY, result.data)
+      } else {
+        await SecureStore.setItemAsync(TOKEN_KEY, result.data);
+      }
+      
       return result;
     } catch (e) {
       return { error: true, msg: e };
