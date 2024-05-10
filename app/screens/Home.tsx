@@ -6,12 +6,18 @@ import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "../context/AuthContext";
+import { IinitialRegion } from "../interfaces/IinitialRegion";
+import { IcurrentLocation } from "../interfaces/IcurrentLocation";
+import api from "../api";
 
 export default function HomeScreen() {
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [initialRegion, setInitialRegion] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState<
+    IcurrentLocation | IcurrentLocation
+  >();
+  const [initialRegion, setInitialRegion] = useState<
+    IinitialRegion | IinitialRegion
+  >();
   const [hour, setHour] = useState(dayjs().locale("pt-br"));
 
   useEffect(() => {
@@ -43,18 +49,21 @@ export default function HomeScreen() {
   }, []);
 
   async function timesheetRegistry() {
-    const userId = await AsyncStorage.getItem("user-id");
-
-    await axios
-      .post(`${API_URL}/registries/create`, {
-        id: userId,
+    await api
+      .post("/time-registry/create", {
         position: {
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
+          latitude: currentLocation?.latitude,
+          longitude: currentLocation?.longitude,
         },
       })
       .then((response) =>
-        alert(`${response.data?.activityType.toLowerCase()} registrada!`)
+        alert(
+          `${response.data?.activityType.toLowerCase()} ${
+            response.data?.activityType.slice(-1) === "A"
+              ? "registrada"
+              : "registrado"
+          }!`
+        )
       )
       .catch((e) => alert(e.response?.data.message));
   }
@@ -63,18 +72,18 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {initialRegion ? (
         <View style={styles.mapContainer}>
-          <MapView
+          {/* <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             initialRegion={initialRegion}
           >
             <Marker
               coordinate={{
-                latitude: currentLocation.latitude,
-                longitude: currentLocation.longitude,
+                latitude: currentLocation!.latitude,
+                longitude: currentLocation!.longitude,
               }}
             />
-          </MapView>
+          </MapView> */}
         </View>
       ) : (
         <View style={[styles.mapContainer, styles.mapSkeleton]}></View>

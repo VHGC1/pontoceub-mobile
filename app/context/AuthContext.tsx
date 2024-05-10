@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
+import api from "../api";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
@@ -9,9 +11,9 @@ interface AuthProps {
   onLogout?: () => Promise<any>;
 }
 
-const TOKEN_KEY = "my-jwt";
+const TOKEN_KEY = "timesheet_access_token";
 
-export const API_URL = "https://subtle-immortal-sailfish.ngrok-free.app/api/";
+export const API_URL = "https://subtle-immortal-sailfish.ngrok-free.app/api";
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -29,9 +31,16 @@ export const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     const loadToken = async () => {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY);
+      let token;
+
+      if (Platform.OS === "web") {
+        token = localStorage.getItem(TOKEN_KEY);
+      } else {
+        token = await SecureStore.getItemAsync(TOKEN_KEY);
+      }
+
       if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         setAuthState({
           token: token,
           authenticated: true,
@@ -49,16 +58,16 @@ export const AuthProvider = ({ children }: any) => {
       });
 
       setAuthState({
-        token: result.data.token,
+        token: result.data,
         authenticated: true,
       });
 
-      axios.defaults.headers.common[
+      api.defaults.headers.common[
         "Authorization"
-      ] = `Bearer ${result.data.token}`;
+      ] = `Bearer ${result.data}`;
 
-      await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
-      await AsyncStorage.setItem("user-id", JSON.stringify(result.data.id));
+      localStorage.setItem(TOKEN_KEY, result.data)
+      await SecureStore.setItemAsync(TOKEN_KEY, result.data);
 
       return result;
     } catch (e) {
@@ -67,10 +76,13 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = async () => {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
-    await AsyncStorage.removeItem("user-id");
+    if (Platform.OS === "web") {
+      localStorage.removeItem(TOKEN_KEY);
+    } else {
+      await SecureStore.deleteItemAsync(TOKEN_KEY);
+    }
 
-    axios.defaults.headers.common["Authorization"] = "";
+    api.defaults.headers.common["Authorization"] = "";
 
     setAuthState({
       token: null,

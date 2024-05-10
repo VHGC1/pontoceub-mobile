@@ -1,27 +1,22 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import { API_URL } from "../context/AuthContext";
 import { useCallback, useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import React from 'react'
+import api from "../api";
 
 const TimesheetList = () => {
-  const [id, setId] = useState();
   const [timeSheetList, setTimeSheetList] = useState([]);
   const [pageNo, setPageNo] = useState(0);
   const [lastPage, setLastPage] = useState();
 
-  useEffect(() => {
-    AsyncStorage.getItem("user-id").then((r) => setId(r));
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
-      axios.get(`${API_URL}/registries/${id}/7/${pageNo}`).then((r) => {
+      api.get(`/registries/?page=${pageNo}&size=7`).then((r) => {
+        console.log(r)
         setTimeSheetList(r.data.content);
         setLastPage(r.data.last);
       });
-    }, [id])
+    }, [])
   );
 
   const marginTopFlatList = () => {
@@ -32,8 +27,8 @@ const TimesheetList = () => {
     setPageNo(pageNo + 1);
 
     if (!lastPage) {
-      axios
-        .get(`${API_URL}/registries/${id}/7/${pageNo}`)
+      api
+        .get(`/registries/?page=${pageNo}&size=7`)
         .then((r) => setTimeSheetList([...timeSheetList, ...r.data]));
     }
   };
@@ -47,7 +42,7 @@ const TimesheetList = () => {
         style={styles.flatListStyle}
         data={timeSheetList}
         renderItem={({ item }) => (
-          <View key={id} style={styles.card}>
+          <View key={Math.random()} style={styles.card}>
             <View style={styles.cardDate}>
               <Text>
                 {item.dateTimeRegistry
