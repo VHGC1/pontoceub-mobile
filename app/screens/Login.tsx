@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 

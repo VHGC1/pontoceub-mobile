@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import { IinitialRegion } from "../interfaces/IinitialRegion";
 import { IcurrentLocation } from "../interfaces/IcurrentLocation";
 import api from "../api";
-import * as SecureStore from "expo-secure-store";
 
 export default function HomeScreen() {
   const [currentLocation, setCurrentLocation] = useState<
