@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
 import api from "../api";
 
 interface AuthProps {
@@ -28,17 +27,9 @@ export const AuthProvider = ({ children }: any) => {
     authenticated: null,
   });
 
-  const os = Platform.OS;
-
   useEffect(() => {
     const loadToken = async () => {
-      let token;
-
-      if (os === "web") {
-        token = localStorage.getItem(TOKEN_KEY);
-      } else {
-        token = await SecureStore.getItemAsync(TOKEN_KEY);
-      }
+      const token = await SecureStore.getItemAsync(TOKEN_KEY);
 
       if (token) {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -63,16 +54,10 @@ export const AuthProvider = ({ children }: any) => {
         authenticated: true,
       });
 
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${result.data}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${result.data}`;
 
-      if (os === "web") {
-        localStorage.setItem(TOKEN_KEY, result.data)
-      } else {
-        await SecureStore.setItemAsync(TOKEN_KEY, result.data);
-      }
-      
+      await SecureStore.setItemAsync(TOKEN_KEY, result.data);
+
       return result;
     } catch (e) {
       return { error: true, msg: e };
@@ -80,11 +65,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = async () => {
-    if (Platform.OS === "web") {
-      localStorage.removeItem(TOKEN_KEY);
-    } else {
-      await SecureStore.deleteItemAsync(TOKEN_KEY);
-    }
+    await SecureStore.deleteItemAsync(TOKEN_KEY);
 
     api.defaults.headers.common["Authorization"] = "";
 

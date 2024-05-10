@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
 const api = axios.create({
@@ -9,21 +8,13 @@ const api = axios.create({
 
 const TOKEN_KEY = "timesheet_access_token";
 
-const getAccessTokenWeb = () => {
-  return localStorage.getItem(TOKEN_KEY);
-};
-
-const getAccessTokenMobile = async () => {
+const getAccessToken = async () => {
   return await SecureStore.getItemAsync(TOKEN_KEY);
 };
 
 api.interceptors.request.use(
   (config) => {
-    if (Platform.OS === "web") {
-      config.headers.Authorization = `Bearer ${getAccessTokenWeb()}`;
-    } else {
-      config.headers.Authorization = `Bearer ${getAccessTokenMobile()}`;
-    }
+    config.headers.Authorization = `Bearer ${getAccessToken()}`;
 
     return config;
   },

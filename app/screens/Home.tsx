@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { IinitialRegion } from "../interfaces/IinitialRegion";
 import { IcurrentLocation } from "../interfaces/IcurrentLocation";
 import api from "../api";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 export default function HomeScreen() {
   const [currentLocation, setCurrentLocation] = useState<
@@ -59,7 +60,8 @@ export default function HomeScreen() {
             response.data?.activityType.slice(-1) === "A"
               ? "registrada"
               : "registrado"
-          }!`)
+          }!`
+        );
       })
       .catch((e: any) => alert(e.response?.data.message));
   }
@@ -68,7 +70,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {initialRegion ? (
         <View style={styles.mapContainer}>
-          {/* <MapView
+          <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             initialRegion={initialRegion}
@@ -79,7 +81,7 @@ export default function HomeScreen() {
                 longitude: currentLocation!.longitude,
               }}
             />
-          </MapView> */}
+          </MapView>
         </View>
       ) : (
         <View style={[styles.mapContainer, styles.mapSkeleton]}></View>
