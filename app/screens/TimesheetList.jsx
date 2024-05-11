@@ -11,7 +11,7 @@ const TimesheetList = () => {
   useFocusEffect(
     useCallback(() => {
       api
-        .get(`time-registry/registries?pageNumber=${pageNo}&size=7`)
+        .get(`/time-registry/registries?pageNumber=${pageNo}&size=7`)
         .then((r) => {
           setTimeSheetList(r.data.content);
           setLastPage(r.data.last);
@@ -36,9 +36,9 @@ const TimesheetList = () => {
   return (
     <View style={styles.container}>
       {timeSheetList.length === 0 && (
-        <div style={{ alignSelf: "center", marginTop: "1rem" }}>
+        <Text style={{ alignSelf: "center", marginTop: "1rem" }}>
           Não existem registros no sistema!
-        </div>
+        </Text>
       )}
       <FlatList
         onEndReached={() => addOnTheTimeSheetList()}

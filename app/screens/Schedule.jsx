@@ -12,7 +12,7 @@ const Schedule = () => {
 
   useFocusEffect(
     useCallback(() => {
-      api.get("/classes/user").then((r) => setClasses(r.data));
+      api.get(`/classes/user`).then((r) => setClasses(r.data));
     }, [])
   );
 
@@ -34,73 +34,68 @@ const Schedule = () => {
 
   return (
     <View style={styles.container}>
-      {classes.length === 0 ? (
-        <div>Não existem aulas cadastradas!</div>
-      ) : (
-        <View style={styles.boxContainer}>
-          <View>
-            <Text style={styles.boxContainerTitle}>Aulas</Text>
-            <View style={styles.lineBoxContainerHeader} />
+      <View style={styles.boxContainer}>
+        <View>
+          <Text style={styles.boxContainerTitle}>Aulas</Text>
+          <View style={styles.lineBoxContainerHeader} />
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <View style={styles.daysContainer}>
+            {classes?.map(({ day }, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => setSelectedDay(index)}
+                style={[
+                  {
+                    backgroundColor: index == selectedDay ? "#fff" : "#f2f2f2",
+                  },
+                  styles.daysButton,
+                ]}
+              >
+                <Text
+                  style={{
+                    color: index == selectedDay ? "#000" : "#ccc",
+                    fontWeight: index === selectedDay ? "bold" : "normal",
+                  }}
+                >
+                  {day.charAt(0).toUpperCase() + day.substring(1, 3)}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <View style={styles.daysContainer}>
-              {classes?.map(({ day }, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => setSelectedDay(index)}
-                  style={[
-                    {
-                      backgroundColor:
-                        index == selectedDay ? "#fff" : "#f2f2f2",
-                    },
-                    styles.daysButton,
-                  ]}
-                >
-                  <Text
+          <View style={styles.classesContainer}>
+            {classes[selectedDay]?.classes.map(
+              ({ schedule, discipline, campus }, index) => (
+                <View key={campus + index}>
+                  <View
                     style={{
-                      color: index == selectedDay ? "#000" : "#ccc",
-                      fontWeight: index === selectedDay ? "bold" : "normal",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 5,
                     }}
                   >
-                    {day.charAt(0).toUpperCase() + day.substring(1, 3)}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <View style={styles.classesContainer}>
-              {classes[selectedDay]?.classes.map(
-                ({ schedule, discipline, campus }, index) => (
-                  <View key={campus + index}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                      }}
-                    >
-                      <MaterialCommunityIcons
-                        name={"clock-outline"}
-                        size={15}
-                        color="black"
-                      />
-                      <Text>{schedule}</Text>
-                    </View>
-
-                    <Text>{discipline}</Text>
-                    <Text>{campus}</Text>
+                    <MaterialCommunityIcons
+                      name={"clock-outline"}
+                      size={15}
+                      color="black"
+                    />
+                    <Text>{schedule}</Text>
                   </View>
-                )
-              )}
-            </View>
+
+                  <Text>{discipline}</Text>
+                  <Text>{campus}</Text>
+                </View>
+              )
+            )}
           </View>
         </View>
-      )}
+      </View>
     </View>
   );
 };

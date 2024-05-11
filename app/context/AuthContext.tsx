@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }: any) => {
 
       if (token) {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
         setAuthState({
           token: token,
           authenticated: true,

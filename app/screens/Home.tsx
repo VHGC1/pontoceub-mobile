@@ -6,8 +6,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { IinitialRegion } from "../interfaces/IinitialRegion";
 import { IcurrentLocation } from "../interfaces/IcurrentLocation";
-import api from "../api";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import api from "../api";
 
 export default function HomeScreen() {
   const [currentLocation, setCurrentLocation] = useState<
@@ -48,13 +48,13 @@ export default function HomeScreen() {
 
   async function timesheetRegistry() {
     await api
-      .post("/time-registry/create", {
+      .post(`/time-registry/create`, {
         position: {
           latitude: currentLocation?.latitude,
           longitude: currentLocation?.longitude,
         },
       })
-      .then((response: any) => {
+      .then((response) => {
         alert(
           `${response.data?.activityType.toLowerCase()} ${
             response.data?.activityType.slice(-1) === "A"
@@ -63,7 +63,7 @@ export default function HomeScreen() {
           }!`
         );
       })
-      .catch((e: any) => alert(e.response?.data.message));
+      .catch((e) => alert(e.response?.data.message));
   }
 
   return (
