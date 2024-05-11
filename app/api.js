@@ -1,3 +1,4 @@
+import { CommonActions } from '@react-navigation/native';
 import axios from "axios";
 
 const api = axios.create({
@@ -20,6 +21,7 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
+      
       
     }
     return Promise.reject(error);

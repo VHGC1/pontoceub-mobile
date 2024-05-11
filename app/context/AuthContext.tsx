@@ -55,9 +55,8 @@ export const AuthProvider = ({ children }: any) => {
         authenticated: true,
       });
 
-      api.defaults.headers.common["Authorization"] = `Bearer ${result.data}`;
-
-      await SecureStore.setItemAsync(TOKEN_KEY, result.data);
+      api.defaults.headers.common["Authorization"] = `Bearer ${result.data.token}`;
+      await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
 
       return result;
     } catch (e) {
