@@ -1,22 +1,18 @@
 import "dayjs/locale/pt-br";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { IinitialRegion } from "../interfaces/IinitialRegion";
-import { IcurrentLocation } from "../interfaces/IcurrentLocation";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import api from "../api";
+import { AxiosContext } from "../context/AxiosContext";
 
 export default function HomeScreen() {
-  const [currentLocation, setCurrentLocation] = useState<
-    IcurrentLocation | IcurrentLocation
-  >();
-  const [initialRegion, setInitialRegion] = useState<
-    IinitialRegion | IinitialRegion
-  >();
+  const [currentLocation, setCurrentLocation] = useState();
+  const [initialRegion, setInitialRegion] = useState();
   const [hour, setHour] = useState(dayjs().locale("pt-br"));
+
+  const { authAxios } = useContext(AxiosContext);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -47,7 +43,7 @@ export default function HomeScreen() {
   }, []);
 
   async function timesheetRegistry() {
-    await api
+    await authAxios
       .post(`/time-registry/create`, {
         position: {
           latitude: currentLocation?.latitude,
@@ -63,7 +59,9 @@ export default function HomeScreen() {
           }!`
         );
       })
-      .catch((e) => alert(e.response?.data.message));
+      .catch((e) => {
+        console.log(e)
+        alert(e.response?.data.message)});
   }
 
   return (
@@ -77,8 +75,8 @@ export default function HomeScreen() {
           >
             <Marker
               coordinate={{
-                latitude: currentLocation!.latitude,
-                longitude: currentLocation!.longitude,
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
               }}
             />
           </MapView>

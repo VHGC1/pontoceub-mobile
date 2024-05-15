@@ -1,16 +1,19 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import api from "../api";
+import { AxiosContext } from "../context/AxiosContext";
 
 const TimesheetList = () => {
   const [timeSheetList, setTimeSheetList] = useState([]);
   const [pageNo, setPageNo] = useState(0);
   const [lastPage, setLastPage] = useState();
 
+  const { authAxios } = useContext(AxiosContext);
+
   useFocusEffect(
     useCallback(() => {
-      api
+      authAxios
         .get(`/time-registry/registries?pageNumber=${pageNo}&size=7`)
         .then((r) => {
           setTimeSheetList(r.data.content);

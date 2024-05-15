@@ -6,14 +6,15 @@ import {
 } from "@react-navigation/drawer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "../screens/Home";
-import { useAuth } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import Schedule from "../screens/Schedule";
 import TimesheetList from "../screens/TimesheetList";
+import { useContext } from "react";
 
 const Drawer = createDrawerNavigator();
 
 export default function UserStack() {
-  const { onLogout } = useAuth();
+  const { logout } = useContext(AuthContext);
 
   return (
     <Drawer.Navigator
@@ -24,7 +25,7 @@ export default function UserStack() {
             <DrawerItemList {...props} />
             <DrawerItem
               label="Sair"
-              onPress={onLogout}
+              onPress={logout}
               icon={() => (
                 <MaterialCommunityIcons name="logout" size={35} color="#000" />
               )}

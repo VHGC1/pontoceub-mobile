@@ -1,18 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import dayjs from "dayjs";
-import api from "../api";
+import { AxiosContext } from "../context/AxiosContext";
 
 const Schedule = () => {
   const [classes, setClasses] = useState([]);
   const [selectedDay, setSelectedDay] = useState(0);
 
+  const { authAxios } = useContext(AxiosContext);
+
   useFocusEffect(
     useCallback(() => {
-      api.get(`/classes/user`).then((r) => setClasses(r.data));
+      authAxios.get(`/classes/user`).then((r) => setClasses(r.data));
     }, [])
   );
 
@@ -34,68 +36,73 @@ const Schedule = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.boxContainer}>
-        <View>
-          <Text style={styles.boxContainerTitle}>Aulas</Text>
-          <View style={styles.lineBoxContainerHeader} />
-        </View>
+      {classes.length === 0 && <Text>Não existem aulas cadastradas!</Text>}
 
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <View style={styles.daysContainer}>
-            {classes?.map(({ day }, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setSelectedDay(index)}
-                style={[
-                  {
-                    backgroundColor: index == selectedDay ? "#fff" : "#f2f2f2",
-                  },
-                  styles.daysButton,
-                ]}
-              >
-                <Text
-                  style={{
-                    color: index == selectedDay ? "#000" : "#ccc",
-                    fontWeight: index === selectedDay ? "bold" : "normal",
-                  }}
-                >
-                  {day.charAt(0).toUpperCase() + day.substring(1, 3)}
-                </Text>
-              </TouchableOpacity>
-            ))}
+      {classes.length > 0 && (
+        <View style={styles.boxContainer}>
+          <View>
+            <Text style={styles.boxContainerTitle}>Aulas</Text>
+            <View style={styles.lineBoxContainerHeader} />
           </View>
 
-          <View style={styles.classesContainer}>
-            {classes[selectedDay]?.classes.map(
-              ({ schedule, discipline, campus }, index) => (
-                <View key={campus + index}>
-                  <View
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <View style={styles.daysContainer}>
+              {classes?.map(({ day }, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => setSelectedDay(index)}
+                  style={[
+                    {
+                      backgroundColor:
+                        index == selectedDay ? "#fff" : "#f2f2f2",
+                    },
+                    styles.daysButton,
+                  ]}
+                >
+                  <Text
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 5,
+                      color: index == selectedDay ? "#000" : "#ccc",
+                      fontWeight: index === selectedDay ? "bold" : "normal",
                     }}
                   >
-                    <MaterialCommunityIcons
-                      name={"clock-outline"}
-                      size={15}
-                      color="black"
-                    />
-                    <Text>{schedule}</Text>
-                  </View>
+                    {day.charAt(0).toUpperCase() + day.substring(1, 3)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
 
-                  <Text>{discipline}</Text>
-                  <Text>{campus}</Text>
-                </View>
-              )
-            )}
+            <View style={styles.classesContainer}>
+              {classes[selectedDay]?.classes.map(
+                ({ schedule, name, campus }, index) => (
+                  <View key={campus + index}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                      }}
+                    >
+                      <MaterialCommunityIcons
+                        name={"clock-outline"}
+                        size={15}
+                        color="black"
+                      />
+                      <Text>{schedule}</Text>
+                    </View>
+
+                    <Text>{name}</Text>
+                    <Text>{campus}</Text>
+                  </View>
+                )
+              )}
+            </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };

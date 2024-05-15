@@ -5,22 +5,39 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import * as Keychain from "react-native-keychain";
+import { useContext, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AuthContext } from "../context/AuthContext";
+import { AxiosContext } from "../context/AxiosContext.js";
+import * as SecureStore from "expo-secure-store";
 
 const Login = () => {
-  const { onLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassord] = useState(true);
 
+  const authContext = useContext(AuthContext);
+  const { publicAxios } = useContext(AxiosContext);
+
   const login = async () => {
-    const result = await onLogin!(email, password);
-    if (result && result.error) {
-      console.log(result)
-      console.log(result.msg.response?.data);
-      alert(result.msg.response.data?.message);
+    try {
+      const response = await publicAxios.post("/login", {
+        email,
+        password,
+      });
+
+      const { token } = response.data;
+
+      authContext.setAuthState({
+        token: token,
+        authenticated: true,
+      });
+
+      await SecureStore.setItemAsync("access_token", result.data.token);
+    } catch (error) {
+      console.log(error)
+      alert("Login Failed", error.response.data.message);
     }
   };
 
@@ -80,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 25
+    paddingVertical: 25,
   },
 
   title: {
