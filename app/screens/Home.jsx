@@ -15,6 +15,10 @@ export default function HomeScreen() {
   const { authAxios } = useContext(AxiosContext);
 
   useEffect(() => {
+    authAxios.get("authenticated");
+  }, [])
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setHour(dayjs());
     }, 1000 * 60);
@@ -38,8 +42,6 @@ export default function HomeScreen() {
         longitudeDelta: 0.005,
       });
     })();
-
-    return () => clearInterval(timer);
   }, []);
 
   async function timesheetRegistry() {
@@ -60,8 +62,8 @@ export default function HomeScreen() {
         );
       })
       .catch((e) => {
-        console.log(e)
-        alert(e.response?.data.message)});
+        alert(e.response?.data.message);
+      });
   }
 
   return (

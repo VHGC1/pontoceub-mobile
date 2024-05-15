@@ -25,8 +25,14 @@ const AxiosProvider = ({ children }) => {
         config.headers.Authorization = `Bearer ${authContext.getAccessToken()}`;
       }
       return config;
+    }
+  );
+
+  authAxios.interceptors.response.use(
+    (response) => {
+      return response;
     },
-    (error) => {
+    async (error) => {
       if (error.response.status === 401) {
         alert("Sessão expirada!");
         authContext.logout();
