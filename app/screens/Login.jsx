@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import * as Keychain from "react-native-keychain";
 import { useContext, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthContext";

@@ -1,11 +1,18 @@
 import "dayjs/locale/pt-br";
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  NetInfo,
+} from "react-native";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { AxiosContext } from "../context/AxiosContext";
+import { AuthContext } from "../context/AuthContext";
 
 export default function HomeScreen() {
   const [currentLocation, setCurrentLocation] = useState();
@@ -13,13 +20,22 @@ export default function HomeScreen() {
   const [hour, setHour] = useState(dayjs().locale("pt-br"));
 
   const { authAxios } = useContext(AxiosContext);
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    authAxios.get("authenticated");
-  }, [])
+    NetInfo.fetch().then((state) => {
+      if (!state.isConnected) {
+        authContext.logout();
+      }
+    });
+  }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    authAxios.get("/authenticated");
+  }, []);
+
+  useEffect(() => {
+    setInterval(() => {
       setHour(dayjs());
     }, 1000 * 60);
 
