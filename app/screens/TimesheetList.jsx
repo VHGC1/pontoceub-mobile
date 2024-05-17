@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useCallback, useContext, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import api from "../api";
 import { AxiosContext } from "../context/AxiosContext";
 
 const TimesheetList = () => {
@@ -30,7 +29,7 @@ const TimesheetList = () => {
     setPageNo(pageNo + 1);
 
     if (!lastPage) {
-      api
+      authAxios
         .get(`time-registry/registries?pageNumber=${pageNo}&size=7`)
         .then((r) => setTimeSheetList([...timeSheetList, ...r.data]));
     }
